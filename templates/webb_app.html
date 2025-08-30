@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather Data</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <h1>Weather Information for {{ weather_data.city }}</h1>
+        <div class="weather-info">
+        <p>
+        <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="Weather icon"></p>
+        <p>📝Description: {{ weather_data.description }}</p>
+        <p>🌡 Temperature: {{ weather_data.temperature }} °C</p>
+        <p>💧 Humidity: {{ weather_data.humidity }} %</p>
+        </div>
+
+        <h2>Location Map</h2>
+        <div id="map"></div>
+
+        <div class="rain-forecasts">
+            <h2>Rain Forecasts:</h2>
+            {% if weather_data.rain_forecasts %}
+            <table>
+                <tr>
+                    <th>Timestamp</th>
+                    <th>Rain Volume (1h)</th>
+                </tr>
+                {% for forecast in weather_data.rain_forecasts %}
+                <tr>
+                    <td>{{ datetime.datetime.fromtimestamp(forecast.timestamp) }}</td>
+                    <td>{{ forecast.volume }}</td>
+                </tr>
+                {% endfor %}
+            </table>
+            {% else %}
+            <p>No rain, it's gonna be a sunny day!☀️</p>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Load Leaflet JS library first -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+    <!-- Initialize the map using Flask variables -->
+    <script>
+    var lat = 59.39387;
+    var lon = 15.83917;
+
+    // Create the map
+    var map = L.map('map').setView([lat, lon], 11);
+
+    // Add OpenStreetMap tiles
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+    }).addTo(map);
+
+    // Add a marker at the location
+    L.marker([lat, lon]).addTo(map)
+        .bindPopup("{{ weather_data.city }}")
+        .openPopup();
+    </script>
+
+</body>
+</html>
