@@ -8,39 +8,43 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
 </head>
 <body>
-    <div class="dashboard-container">
-        <h1>Weather Information for {{ weather_data.city }}</h1>
-        <div class="weather-info">
+<div class="dashboard-container">
+    <h1>Weather Information for {{ weather_data.city }}</h1>
+
+    <div class="weather-info">
         <p>
-        <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="Weather icon"></p>
-        <p>📝Description: {{ weather_data.description }}</p>
+            <img src="http://openweathermap.org/img/wn/{{ weather_data.icon }}@2x.png" alt="Weather icon">
+        </p>
+        <p>📅 Date: {{ current_date }}</p>
+        <p>📝 Description: {{ weather_data.description }}</p>
         <p>🌡 Temperature: {{ weather_data.temperature }} °C</p>
+        <p>🤗 Feels like: {{ weather_data.feels_like }} °C</p>
         <p>💧 Humidity: {{ weather_data.humidity }} %</p>
-        </div>
-
-        <h2>Location Map</h2>
-        <div id="map"></div>
-
-        <div class="rain-forecasts">
-            <h2>Rain Forecasts:</h2>
-            {% if weather_data.rain_forecasts %}
-            <table>
-                <tr>
-                    <th>Timestamp</th>
-                    <th>Rain Volume (1h)</th>
-                </tr>
-                {% for forecast in weather_data.rain_forecasts %}
-                <tr>
-                    <td>{{ datetime.datetime.fromtimestamp(forecast.timestamp) }}</td>
-                    <td>{{ forecast.volume }}</td>
-                </tr>
-                {% endfor %}
-            </table>
-            {% else %}
-            <p>No rain, it's gonna be a sunny day!☀️</p>
-            {% endif %}
-        </div>
     </div>
+
+    <h2>Location Map</h2>
+    <div id="map"></div>
+
+    <div class="rain-forecasts">
+        <h2>Rain Forecasts:</h2>
+        {% if weather_data.rain_forecasts %}
+        <table>
+            <tr>
+                <th>Date & Time</th>
+                <th>Rain Volume (1h)</th>
+            </tr>
+            {% for forecast in weather_data.rain_forecasts %}
+            <tr>
+                <td>{{ forecast.date_str }} {{ forecast.time_str }}</td>
+                <td>{{ forecast.volume }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        {% else %}
+        <p>No rain, it's gonna be a sunny day!☀️</p>
+        {% endif %}
+    </div>
+</div>
 
     <!-- Load Leaflet JS library first -->
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
