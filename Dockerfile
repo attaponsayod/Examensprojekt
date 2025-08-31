@@ -15,4 +15,4 @@ COPY . .
 EXPOSE 5000
 
 # Run Gunicorn using $PORT from Heroku
-CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT:-5000} app:app"]
+CMD ["gunicorn", "app:app", "-b", "0.0.0.0:$PORT"]
