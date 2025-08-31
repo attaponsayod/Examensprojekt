@@ -8,11 +8,11 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy application code
+# Copy all app files
 COPY . .
 
-# Expose port (optional for documentation)
-EXPOSE 5000
+# Expose port
+EXPOSE 80
 
-# Run Gunicorn using $PORT from Heroku
-CMD ["gunicorn", "app:app", "-b", "0.0.0.0:$PORT"]
+# Start the app
+CMD ["gunicorn", "-b", "0.0.0.0:80", "app:app"]
