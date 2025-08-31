@@ -1,22 +1,18 @@
-# Use a lightweight base image
-FROM python:3.9-slim
-
-# Set environment variables to prevent Python buffering issues
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+# Use slim Python image
+FROM python:3.11-slim
 
 # Set working directory
 WORKDIR /app
 
-# Install dependencies
+# Copy requirements and install
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the app
+# Copy application code
 COPY . .
 
-# Expose the port your app will run on
+# Expose port (optional for documentation)
 EXPOSE 5000
 
-# Run the app with gunicorn
-CMD ["gunicorn", "-b", "0.0.0.0:5000", "app:app"]
+# Run Gunicorn using $PORT from Heroku
+CMD ["sh", "-c", "gunicorn -b 0.0.0.0:${PORT:-5000} app:app"]
